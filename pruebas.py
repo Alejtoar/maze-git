@@ -10,29 +10,34 @@ class Maze:
         self.width = 15
         self.height = 15
         self.top_n_buttom = "+" + ("-" * 3 * self.width) + "+"
-        self.actual_pos = [5, 5]
+        self.snake = [[5, 5],[5, 4]]
         self.points = list(Maze.objects_gen())
         self.round_count = 1
         self.mov_vector = [0, 0]
+
 
     def char_to_vector(self):
         direction = readchar.readchar()
 
         if direction == "w" or direction == "W":
             self.mov_vector = [-1, 0]
-        elif direction == "a" or direction ==  "A":
+        elif direction == "a" or direction == "A":
             self.mov_vector = [0, -1]
-        elif direction == "s" or direction ==  "S":
+        elif direction == "s" or direction == "S":
             self.mov_vector = [1, 0]
-        elif direction == "d" or direction ==  "D":
+        elif direction == "d" or direction == "D":
             self.mov_vector = [0, 1]
-        elif direction == direction == "t" or direction ==  "T":
+        elif direction == direction == "t" or direction == "T":
             self.mov_vector = [0, 0]
             self.ongame = False
 
-    def sum_of_mov_vector(self):
-        for i in range(len(self.actual_pos)):
-            self.actual_pos[i] = self.actual_pos[i] + self.mov_vector[i]
+    def movement(self):
+        self.head = self.snake[0]
+        self.new_head = []
+        for i in range(len(self.head)):
+           self.new_head.append(self.head[i] + self.mov_vector[i])
+        self.snake.insert(0, self.new_head)
+        self.snake.pop()
         return
 
     @staticmethod
@@ -49,45 +54,53 @@ class Maze:
             self.points = list(Maze.objects_gen())
         self.round_count += 1
         print(self.top_n_buttom)
-
         for i in range(self.height):
             mark_pointy = i
             print("|", end="")
             for j in range(self.width):
                 mark_pointx = j
-                if mark_pointy == self.actual_pos[0] and mark_pointx == self.actual_pos[1]:
+
+                if [mark_pointy, mark_pointx] in self.snake:
                     print(" @ ", end="")
-                    if self.actual_pos in self.points:
-                        self.points.remove(self.actual_pos)
+
+                    self.add_tail()
+
                 elif [mark_pointy, mark_pointx] in self.points:
                     print(" * ", end="")
                 else:
                     print("   ", end="")
             print("|")
         print(self.top_n_buttom)
+        print(self.snake)
 
-    def movement(self):
-        if self.actual_pos[0] > self.height - 1:
-            self.actual_pos[0] = 0
-        if self.actual_pos[0] < 0:
-            self.actual_pos[0] = self.height - 1
-        if self.actual_pos[1] > self.width - 1:
-            self.actual_pos[1] = 0
-        if self.actual_pos[1] < 0:
-            self.actual_pos[1] = self.width - 1
-
+    def limit_interaction(self):
+        if self.snake[0][0] > self.height - 1:
+            self.snake[0][0] = 0
+        if self.snake[0][0] < 0:
+            self.snake[0][0] = self.height - 1
+        if self.snake[0][1] > self.width - 1:
+            self.snake[0][1] = 0
+        if self.snake[0][1] < 0:
+            self.snake[0][1] = self.width - 1
 
     def start_maze(self):
         while self.ongame:
             self.map_generator()
             self.char_to_vector()
-            self.sum_of_mov_vector()
             self.movement()
+            self.limit_interaction()
             os.system("cls")
+
+    def add_tail(self):
+        if self.snake[0] in self.points:
+            self.snake.insert(0, self.snake[0])
+            self.points.remove(self.snake[0])
+
 
 def main():
     partida = Maze()
     partida.start_maze()
+
 
 if __name__ == '__main__':
     main()
