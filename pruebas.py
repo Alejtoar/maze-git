@@ -18,14 +18,17 @@ class Maze:
     def char_to_vector(self):
         direction = readchar.readchar()
 
-        if direction == "w":
+        if direction == "w" or direction == "W":
             self.mov_vector = [-1, 0]
-        elif direction == "a":
+        elif direction == "a" or direction ==  "A":
             self.mov_vector = [0, -1]
-        elif direction == "s":
+        elif direction == "s" or direction ==  "S":
             self.mov_vector = [1, 0]
-        elif direction == "d":
+        elif direction == "d" or direction ==  "D":
             self.mov_vector = [0, 1]
+        elif direction == direction == "t" or direction ==  "T":
+            self.mov_vector = [0, 0]
+            self.ongame = False
 
     def sum_of_mov_vector(self):
         for i in range(len(self.actual_pos)):
@@ -64,15 +67,27 @@ class Maze:
         print(self.top_n_buttom)
 
     def movement(self):
-        new_pos = list(self.sum_of_mov_vector())
+        if self.actual_pos[0] > self.height - 1:
+            self.actual_pos[0] = 0
+        if self.actual_pos[0] < 0:
+            self.actual_pos[0] = self.height - 1
+        if self.actual_pos[1] > self.width - 1:
+            self.actual_pos[1] = 0
+        if self.actual_pos[1] < 0:
+            self.actual_pos[1] = self.width - 1
 
-        if new_pos[0] > self.height - 1:
-            new_pos[0] = 0
-        if new_pos[0] < 0:
-            new_pos[0] = self.height - 1
-        if new_pos[1] > self.width - 1:
-            new_pos[1] = 0
-        if new_pos[1] < 0:
-            new_pos[1] = self.width - 1
-        self.actual_pos = new_pos
-        os.system("cls")
+
+    def start_maze(self):
+        while self.ongame:
+            self.map_generator()
+            self.char_to_vector()
+            self.sum_of_mov_vector()
+            self.movement()
+            os.system("cls")
+
+def main():
+    partida = Maze()
+    partida.start_maze()
+
+if __name__ == '__main__':
+    main()
