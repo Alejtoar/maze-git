@@ -2,6 +2,9 @@ import os
 from random import randint
 import readchar
 
+""" Este programa es un juego de culebrita, muy simple, y requiere ser ejecutado en terminal para poder jugarse
+
+    se maneja con las teclas W A S D, y se sale con T"""
 
 class Maze:
 
@@ -15,7 +18,7 @@ class Maze:
         self.round_count = 1
         self.mov_vector = [0, 0]
 
-
+# metodo que toma un caracter y lo transforma en un vector de movimiento, t o T para salir"
     def char_to_vector(self):
         direction = readchar.readchar()
 
@@ -31,6 +34,8 @@ class Maze:
             self.mov_vector = [0, 0]
             self.ongame = False
 
+# Toma el valor de la cabeza, le reasigna uno nuevo sumandole el vector de movimiento, luego se inserta en la serpierte
+# en la parte inicial y se borra el valor de la cola
     def movement(self):
         self.head = self.snake[0]
         self.new_head = []
@@ -40,6 +45,7 @@ class Maze:
         self.snake.pop()
         return
 
+# Metodo de crear puntos
     @staticmethod
     def objects_gen():
         objects = []
