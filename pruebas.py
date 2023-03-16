@@ -89,12 +89,18 @@ class Maze:
             self.char_to_vector()
             self.movement()
             self.limit_interaction()
+            self.collision()
             os.system("cls")
 
     def add_tail(self):
         if self.snake[0] in self.points:
             self.snake.insert(0, self.snake[0])
             self.points.remove(self.snake[0])
+
+    def collision(self):
+        self.head = self.snake[0]
+        if self.head in self.snake[1:]:
+            self.ongame = False
 
 
 def main():
